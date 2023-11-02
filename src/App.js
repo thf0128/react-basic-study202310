@@ -10,12 +10,12 @@ const App = () => {
     {
       id: 2,
       title: '바나나',
-      price: '2000',
+      price: '20000',
       date: new Date(2023, 3 - 1, 23),
     },
     {
       id: 3,
-      title: 'BBQ 치킨',
+      title: 'BBQ치킨',
       price: '20000',
       date: new Date(2022, 5 - 1, 23),
     },
