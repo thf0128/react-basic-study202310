@@ -35,6 +35,7 @@ const App = () => {
     // const updateGoals = [...goals]; // 상태 배열 그대로 복사해서 가져옴.
     // const index = updateGoals.findIndex((goal) => goal.id === id);
     // updateGoals.splice(index, 1);
+
     // const updateGoals = goals.filter((goal) => goal.id !== id);
 
     setGoals(goals.filter((goal) => goal.id !== id));
