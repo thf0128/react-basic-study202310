@@ -34,13 +34,14 @@ const ExpenseForm = ({ onSaveExpense, onToggle }) => {
   const formSubmitHandler = (e) => {
     e.preventDefault(); // submit 차단
 
-    const newExpense = {
+    const NewExpense = {
+      id: '',
       title: userInput.title,
       price: +userInput.price,
       date: new Date(userInput.date),
     };
 
-    onSaveExpense(userInput);
+    onSaveExpense(NewExpense);
 
     // 입력창 리셋
     setUserInput({
