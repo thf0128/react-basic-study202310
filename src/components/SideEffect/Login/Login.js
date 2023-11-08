@@ -15,9 +15,9 @@ import Button from '../../UI/Button/Button';
  return: 관리할 상태값들을 반환
 */
 const emailReducer = (state, action) => {
-  console.log('email reducer called!!!');
-  console.log('state: ', state);
-  console.log('action: ', action);
+  // console.log('email reducer called!!!');
+  // console.log('state: ', state);
+  // console.log('action: ', action);
 
   // dispatch 함수가 전달한 액션 객체의 타입에 따라 변경할 상태값을 반환.
   if (action.type === 'USER_INPUT') {
@@ -32,11 +32,26 @@ const emailReducer = (state, action) => {
     };
   }
 
-  return {
-    value: '',
-    isValid: null,
-  };
+  // return {
+  //   value: '',
+  //   isValid: null,
+  // };
 };
+
+const passwordReducer = (state, action) => {
+  if (action.type === 'USER_INPUT') {
+    return {
+      value: action.val,
+      isValid: action.val.trim().length > 6,
+    };
+  } else if (action.type === 'INPUT_VALIDATE') {
+    return {
+      value: state.vlaue,
+      isValid: state.value.trim().length > 6,
+    };
+  }
+};
+
 const Login = ({ onLogin }) => {
   // email reducer
   /*
@@ -50,16 +65,18 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
     isValid: null,
   });
 
-  // 패스워드 입력값을 저장
-  const [enteredPassword, setEnteredPassword] = useState('');
-  // 패스워드 입력이 정상적인지 확인
-  const [passwordIsValid, setPasswordIsValid] = useState();
+  const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
+    value: '',
+    isValid: null,
+  });
+
   // 이메일, 패스워드가 둘 다 동시에 정상적인 상태인지 확인
   const [formIsValid, setFormIsValid] = useState(false);
 
   // emailState는 객체 형태. -> isValid 프로퍼티가 변경됐을 때만 useEffect를 실행하게 하려면
   // isValid를 디스트럭쳐링 한다. (프로퍼티로 바로 사용 x)
   const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
   // 입력란을 모두 체크하여 form의 버튼 disabled를 해제하는
   // 상태 변수 formIsValid의 사이드 이펙트를 처리하는 영역
@@ -67,7 +84,7 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
   useEffect(() => {
     const timer = setTimeout(() => {
       console.log('useEffect called in Login.js!');
-      setFormIsValid(emailIsValid && enteredPassword.trim().length > 6);
+      setFormIsValid(emailIsValid && passwordIsValid);
     }, 1000);
 
     //cleanup 함수 - 컴포넌트가 업데이트 되거나 없어지기 전에 실행
@@ -77,7 +94,7 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
     };
 
     // 이 배열에 상태변수를 넣어주면 그 상태변수가 바뀔 때마다 useEffect를 재실행함.
-  }, [emailIsValid, enteredPassword]);
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (e) => {
     // reducer의 상태 변경은 dispatch함수를 통해 처리
@@ -91,7 +108,10 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
   };
 
   const passwordChangeHandler = (e) => {
-    setEnteredPassword(e.target.value);
+    dispatchPassword({
+      type: 'USER_INPUT',
+      val: e.target.value,
+    });
   };
 
   const validateEmailHandler = () => {
@@ -101,12 +121,14 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
   };
 
   const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
+    dispatchPassword({
+      type: 'INPUT_VALIDATE',
+    });
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    onLogin(emailState.value, enteredPassword);
+    onLogin(emailState.value, passwordState.value);
   };
 
   return (
@@ -135,7 +157,7 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
           <input
             type='password'
             id='password'
-            value={enteredPassword}
+            value={passwordState.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
