@@ -1,8 +1,10 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 
 import Card from '../../UI/Card';
 import styles from './Login.module.css';
 import Button from '../../UI/Button/Button';
+import AuthContext from '../../../store/auth-context';
+import Input from '../../UI/Input/Input';
 
 // 리듀서 함수
 /*
@@ -52,14 +54,16 @@ const passwordReducer = (state, action) => {
   }
 };
 
-const Login = ({ onLogin }) => {
-  // email reducer
+const Login = () => {
+  const { onLogin } = useContext(AuthContext);
+
+  // email reducer 사용하기
   /*
-param1 - reducer function: 위에서 만든 리듀서 함수
-param2 - initial state: 초기 상태값
-return1 - 이메일 관련 상태변수
-return2 - dispatch함수: 상태를 변경할 수 있는 함수
-*/
+    param1 - reducer function: 위에서 만든 리듀서 함수
+    param2 - initial state: 초기 상태값
+    return1 - 이메일 관련 상태변수
+    return2 - dispatch함수: 상태를 변경할 수 있는 함수
+  */
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: '',
     isValid: null,
@@ -134,20 +138,22 @@ return2 - dispatch함수: 상태를 변경할 수 있는 함수
   return (
     <Card className={styles.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${styles.control} ${
-            !emailState.isValid ? styles.invalid : ''
-          }`}
-        >
-          <label htmlFor='email'>E-Mail</label>
-          <input
-            type='email'
-            id='email'
-            value={emailState.value}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
+        <Input
+          type='email'
+          id='email'
+          label='E-mail'
+          value={emailState.value}
+          isValid={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        />
+        <Input
+          type='password'
+          id='password'
+          label='Password'
+          value={passwordState.value}
+          isValid={passwordChangeHandler}
+          onBlur={validatepasswordHandler}
+        />
         <div
           className={`${styles.control} ${
             passwordIsValid === false ? styles.invalid : ''
