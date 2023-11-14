@@ -141,9 +141,10 @@ const Login = () => {
         <Input
           type='email'
           id='email'
-          label='E-mail'
+          label='E-Mail'
           value={emailState.value}
-          isValid={emailChangeHandler}
+          isValid={emailIsValid}
+          onChange={emailChangeHandler}
           onBlur={validateEmailHandler}
         />
         <Input
@@ -151,8 +152,9 @@ const Login = () => {
           id='password'
           label='Password'
           value={passwordState.value}
-          isValid={passwordChangeHandler}
-          onBlur={validatepasswordHandler}
+          isValid={passwordIsValid}
+          onChange={passwordChangeHandler}
+          onBlur={validatePasswordHandler}
         />
         <div
           className={`${styles.control} ${
